@@ -1,7 +1,7 @@
 import { Octokit } from "@octokit/rest";
 
 const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
-const [owner, repo] = process.env.split("/");
+const [owner, repo] = process.env.REPO.split("/");
 
 export async function getPushData() {
   const sha = process.env.COMMIT_SHA;
@@ -13,6 +13,8 @@ export async function getPushData() {
   });
 
   const files = data.files || [];
+  const totalAdditions = files.reduce((sum, f) => sum + (f.additions || 0), 0);
+  const totalDeletions = files.reduce((sum, f) => sum + (f.deletions || 0), 0);
 
   return {
     type: "push",
@@ -26,6 +28,7 @@ export async function getPushData() {
       status: f.status,
       additions: f.additions,
       deletions: f.deletions,
+      patch: f.patch,
     })),
   };
 }

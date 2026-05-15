@@ -6,6 +6,10 @@ on:
   pull_request:
     types: [closed]
 
+permissions:
+  contents: read
+  models: read
+
 jobs:
   notify:
     runs-on: ubuntu-latest

@@ -1,6 +1,6 @@
-import { getPushDiff, getPRDiff } from "./github.js";
+import { getPushData } from "./github.js";
 import { summarizeDiff } from "./llm.js";
-import { sendDiscordNotification } from "./discord.js";
+import { sendDiscordNotif } from "./discord.js";
 
 // Hardcoded config for testing
 const MIN_LINES_CHANGED = 1;
@@ -23,9 +23,7 @@ async function main() {
   // Fetch diff data from GitHub API
   let diffData;
   if (eventName === "push") {
-    diffData = await getPushDiff();
-  } else if (eventName === "pull_request") {
-    diffData = await getPRDiff();
+    diffData = await getPushData();
   } else {
     console.log("Unsupported event, skipping.");
     return;
@@ -47,7 +45,7 @@ async function main() {
   console.log(`✅ Summary: ${summary.summary}`);
 
   console.log("📨 Sending to Discord...");
-  await sendDiscordNotification(diffData, summary);
+  await sendDiscordNotif(diffData, summary);
   console.log("🎉 Done!");
 }
 

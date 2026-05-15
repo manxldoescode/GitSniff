@@ -1,10 +1,18 @@
-const { openai } = require("../src/openai.config");
+import OpenAI from "openai";
 
+const openai = new OpenAI({
+  baseURL: "https://models.github.ai/inference",
+  apiKey: process.env.GITHUB_TOKEN,
+  defaultHeaders: {
+    Accept: "application/vnd.github+json",
+    "X-GitHub-Api-Version": "2022-11-28",
+  },
+});
 export async function summarizeDiff(diffData) {
   const prompt = buildPrompt(diffData);
 
   const response = await openai.chat.completions.create({
-    model: "openai/gpt-4o-mini",
+    model: "openai/gpt-4.1",
     max_tokens: 1024,
     response_format: { type: "json_object" },
     messages: [
@@ -21,7 +29,7 @@ export async function summarizeDiff(diffData) {
     ],
   });
 
-  const text = response.choices[0]?.messages.content || " ";
+  const text = response.choices[0]?.message.content || " ";
 
   try {
     return JSON.parse(text.trim());

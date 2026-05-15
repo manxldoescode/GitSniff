@@ -31,7 +31,7 @@ export async function sendDiscordNotif(diffData, summary) {
 
   if (!response.ok) {
     const text = await response.text();
-    throw new Error(`Discord webhook failed : ${response.statis} ${text}`);
+    throw new Error(`Discord webhook failed : ${response.status} ${text}`);
   }
 }
 
